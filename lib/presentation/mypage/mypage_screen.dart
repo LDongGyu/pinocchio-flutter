@@ -214,19 +214,6 @@ class _MyPageScreenState extends State<MyPageScreen> {
                                 fontWeight: FontWeight.w800,
                                 fontFamily: 'nanum_square'),
                           ),
-                          // SizedBox(
-                          //     height:
-                          //     getProportionateScreenHeight(8.0)),
-                          // Text(
-                          //   widget.clothInfo.noticeViewList[index].description == null ? '' : widget.clothInfo.noticeViewList[index].description,
-                          //   overflow: TextOverflow.ellipsis,
-                          //   style: TextStyle(
-                          //       fontSize:
-                          //       getProportionateScreenHeight(
-                          //           22.0),
-                          //       fontWeight: FontWeight.w800,
-                          //       fontFamily: 'nanum_square'),
-                          // ),
                           SizedBox(
                               height:
                               getProportionateScreenHeight(10.0)),
@@ -389,7 +376,30 @@ class _MyPageScreenState extends State<MyPageScreen> {
                 });
               },
               onTap: () {
-                Navigator.push(context, CategoryScreen.route());
+                var category = "";
+                switch(index){
+                  case 1:{
+                    category = '상의';
+                    break;
+                  }
+                  case 2: {
+                    category = '하의';
+                    break;
+                  }
+                  case 3: {
+                    category = '양말';
+                    break;
+                  }
+                  case 4: {
+                    category = '속옷';
+                    break;
+                  }
+                  case 5: {
+                    category = '수건';
+                    break;
+                  }
+                }
+                Navigator.push(context, CategoryScreen.route(widget.clothInfo, category));
               },
               child: _currentCameraSvg[index],
             ),
