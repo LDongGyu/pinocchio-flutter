@@ -8,7 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:touchable_opacity/touchable_opacity.dart';
 
 class CategoryScreen extends StatefulWidget {
-  final MyPageResponse data;
+  final List<Cloth> data;
   final String category;
 
   @override
@@ -16,7 +16,7 @@ class CategoryScreen extends StatefulWidget {
 
   const CategoryScreen({this.data, this.category}) : super();
 
-  static Route route(MyPageResponse event, String category) {
+  static Route route(List<Cloth> event, String category) {
     return MaterialPageRoute(builder: (_) {
       return CategoryScreen(data: event, category: category);
     });
@@ -60,7 +60,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
             child: ListView.builder(
                 padding: EdgeInsets.symmetric(
                     horizontal: getProportionateScreenWidth(30)),
-                itemCount: 10,
+                itemCount: widget.data.length,
                 shrinkWrap: true,
                 physics: BouncingScrollPhysics(),
                 itemBuilder: (BuildContext context, int index) {
@@ -97,7 +97,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     SizedBox(
                       width: 10,
                     ),
-                    Text('자라에서 구매한 니트 최대 18자',
+                    Text(widget.data[index].title,
                         style: TextStyle(
                             fontSize: getProportionateScreenHeight(14),
                             fontWeight: FontWeight.w700,

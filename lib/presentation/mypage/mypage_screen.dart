@@ -380,26 +380,30 @@ class _MyPageScreenState extends State<MyPageScreen> {
                 switch(index){
                   case 1:{
                     category = '상의';
+                    Navigator.push(context, CategoryScreen.route(widget.clothInfo.clothesByClothesType.top, category));
                     break;
                   }
                   case 2: {
                     category = '하의';
+                    Navigator.push(context, CategoryScreen.route(widget.clothInfo.clothesByClothesType.pants, category));
                     break;
                   }
                   case 3: {
                     category = '양말';
+                    Navigator.push(context, CategoryScreen.route(widget.clothInfo.clothesByClothesType.socks, category));
                     break;
                   }
                   case 4: {
                     category = '속옷';
+                    Navigator.push(context, CategoryScreen.route(widget.clothInfo.clothesByClothesType.underwear, category));
                     break;
                   }
                   case 5: {
                     category = '수건';
+                    Navigator.push(context, CategoryScreen.route(widget.clothInfo.clothesByClothesType.towel, category));
                     break;
                   }
                 }
-                Navigator.push(context, CategoryScreen.route(widget.clothInfo, category));
               },
               child: _currentCameraSvg[index],
             ),
