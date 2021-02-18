@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sancle/data/model/home_response.dart';
+import 'package:flutter_sancle/data/network/dio_client.dart';
 import 'package:flutter_sancle/data/repository/auth_repository.dart';
 import 'package:flutter_sancle/data/repository/home_repository.dart';
 import 'package:flutter_sancle/data/repository/onboarding_repository.dart';
@@ -32,9 +34,14 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
         bool isAlreadyShownGuide = await _onboardingRepository.getIsGuide();
         yield UserTokenCheckedFailure(isAlreadyShownGuide);
       } else {
-        HomeResponse _homeInfo = new HomeResponse();
-        _homeInfo = await _homeRepository.getHomeInfo();
-        _notiController.add(_homeInfo);
+        try{
+          HomeResponse _homeInfo = new HomeResponse();
+          _homeInfo = await _homeRepository.getHomeInfo();
+          _notiController.add(_homeInfo);
+        } on DioError catch(e){
+
+        }
+
         yield UserTokenCheckedSuccess();
       }
     }

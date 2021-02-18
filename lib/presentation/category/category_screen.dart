@@ -18,6 +18,7 @@ class CategoryScreen extends StatefulWidget {
 
   static Route route(List<Cloth> event, String category) {
     return MaterialPageRoute(builder: (_) {
+        if(event == null) event = new List();
       return CategoryScreen(data: event, category: category);
     });
   }
@@ -60,7 +61,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
             child: ListView.builder(
                 padding: EdgeInsets.symmetric(
                     horizontal: getProportionateScreenWidth(30)),
-                itemCount: widget.data.length,
+                itemCount: widget.data == null ? 0 : widget.data.length,
                 shrinkWrap: true,
                 physics: BouncingScrollPhysics(),
                 itemBuilder: (BuildContext context, int index) {
@@ -97,7 +98,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     SizedBox(
                       width: 10,
                     ),
-                    Text(widget.data[index].title,
+                    Text(widget.data[index].title == null ? '' : widget.data[index].title,
                         style: TextStyle(
                             fontSize: getProportionateScreenHeight(14),
                             fontWeight: FontWeight.w700,
