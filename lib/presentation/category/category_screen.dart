@@ -98,7 +98,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     SizedBox(
                       width: 10,
                     ),
-                    Text(widget.data[index].title == null ? '' : widget.data[index].title,
+                    Text(widget.data[index].title == null ? 'Cloth' : widget.data[index].title,
                         style: TextStyle(
                             fontSize: getProportionateScreenHeight(14),
                             fontWeight: FontWeight.w700,
