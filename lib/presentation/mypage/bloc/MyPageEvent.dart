@@ -12,3 +12,5 @@ class MyPageSlide extends MyPageEvent {
 
   MyPageSlide(this.page);
 }
+
+class GetInfo extends MyPageEvent {}

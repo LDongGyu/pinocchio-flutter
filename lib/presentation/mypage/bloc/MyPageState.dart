@@ -5,4 +5,6 @@ abstract class MyPageState extends Equatable {
   List<Object> get props => [];
 }
 
-class MyPageStart extends MyPageState {}
+class MyPageInit extends MyPageState {}
+
+class GetSuccess extends MyPageState {}

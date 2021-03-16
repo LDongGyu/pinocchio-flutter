@@ -1,11 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sancle/data/model/home_response.dart';
 import 'package:flutter_sancle/data/model/mypage_response.dart';
+import 'package:flutter_sancle/data/repository/mypage_repository.dart';
 import 'package:flutter_sancle/presentation/category/category_screen.dart';
-import 'package:flutter_sancle/presentation/home/home_screen.dart';
 import 'package:flutter_sancle/presentation/mypage/bloc/MyPageBloc.dart';
 import 'package:flutter_sancle/presentation/mypage/bloc/MyPageState.dart';
 import 'package:flutter_sancle/utils/constants.dart';
@@ -16,18 +15,17 @@ import 'package:touchable_opacity/touchable_opacity.dart';
 import 'bloc/MyPageEvent.dart';
 
 class MyPageScreen extends StatefulWidget {
-  final MyPageResponse clothInfo;
-  final HomeResponse profile;
+  HomeResponse user;
 
-  const MyPageScreen({this.clothInfo, this.profile}) : super();
+  MyPageScreen(HomeResponse user) : super();
 
-  static Route route(MyPageResponse event, HomeResponse noti) {
+  static Route route(HomeResponse event) {
     return MaterialPageRoute(
         builder: (_) => BlocProvider<MyPageBloc>(
               create: (context) {
-                return MyPageBloc()..add(MyPageInitial());
+                return MyPageBloc(MyPageRepository())..add(MyPageInitial());
               },
-              child: MyPageScreen(clothInfo: event, profile: noti),
+              child: MyPageScreen(event),
             ));
   }
 
@@ -37,12 +35,14 @@ class MyPageScreen extends StatefulWidget {
 
 class _MyPageScreenState extends State<MyPageScreen> {
   List<SvgPicture> _currentCameraSvg = new List(5);
+  MyPageBloc _myPageBloc;
   GlobalKey clothNum = GlobalKey();
   double _width = 0.0;
 
   @override
   void initState() {
     super.initState();
+    _myPageBloc = BlocProvider.of<MyPageBloc>(context);
     for (int i = 0; i < 5; i++) {
       _currentCameraSvg[i] = new SvgPicture.asset(_category[i][0],
           height: getProportionateScreenHeight(60),
@@ -69,7 +69,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
         backgroundColor: buttonDisableColor,
         body: BlocListener<MyPageBloc, MyPageState>(
           listener: (context, state) {
-            if (state is MyPageStart) {}
+
           },
           child: SafeArea(
             child: SingleChildScrollView(
@@ -199,9 +199,9 @@ class _MyPageScreenState extends State<MyPageScreen> {
                         children: [
                           SizedBox(height: getProportionateScreenHeight(36.0)),
                           Text(
-                            widget.clothInfo.noticeViewList[index].title == null
+                            _myPageBloc.myPageResponse.noticeViewList[index].title == null
                                 ? ''
-                                : widget.clothInfo.noticeViewList[index].title,
+                                : _myPageBloc.myPageResponse.noticeViewList[index].title,
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.end,
                             maxLines: 2,
@@ -211,26 +211,12 @@ class _MyPageScreenState extends State<MyPageScreen> {
                                 fontFamily: 'nanum_square'),
                           ),
 
-                          // SizedBox(
-                          //     height:
-                          //     getProportionateScreenHeight(8.0)),
-                          // Text(
-                          //   widget.clothInfo.noticeViewList[index].description == null ? '' : widget.clothInfo.noticeViewList[index].description,
-                          //   overflow: TextOverflow.ellipsis,
-                          //   style: TextStyle(
-                          //       fontSize:
-                          //       getProportionateScreenHeight(
-                          //           22.0),
-                          //       fontWeight: FontWeight.w800,
-                          //       fontFamily: 'nanum_square'),
-                          // ),
                           SizedBox(height: getProportionateScreenHeight(10.0)),
                           Text(
-                            widget.clothInfo.noticeViewList[index].content ==
+                            _myPageBloc.myPageResponse.noticeViewList[index].content ==
                                     null
                                 ? ''
-                                : widget
-                                    .clothInfo.noticeViewList[index].content,
+                                : _myPageBloc.myPageResponse.noticeViewList[index].content,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
@@ -258,7 +244,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
                     for (int i = 0;
-                        i < widget.clothInfo.noticeViewList.length;
+                        i < _myPageBloc.myPageResponse.noticeViewList.length;
                         i++)
                       if (i == snapshot.data) ...[_circleBar(true)] else
                         _circleBar(false),
@@ -290,7 +276,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
             children: [
               Expanded(child: Container()),
               Text(
-                '${widget.profile.nickName}님',
+                '${widget.user.nickName}님',
                 maxLines: 1,
                 style: TextStyle(
                     fontSize: getProportionateScreenHeight(20),
@@ -319,7 +305,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                       width: _width,
                     ),
                     Text(
-                      '${widget.clothInfo.myLabelCount}',
+                      '${_myPageBloc.myPageResponse.myLabelCount}',
                       key: clothNum,
                       style: TextStyle(
                           fontSize: getProportionateScreenHeight(14),
@@ -385,27 +371,27 @@ class _MyPageScreenState extends State<MyPageScreen> {
                 switch(index){
                   case 0:{
                     category = '상의';
-                    Navigator.push(context, CategoryScreen.route(widget.clothInfo.clothesByClothesType.top, category));
+                    Navigator.push(context, CategoryScreen.route(_myPageBloc.myPageResponse.clothesByClothesType.top, category));
                     break;
                   }
                   case 1: {
                     category = '하의';
-                    Navigator.push(context, CategoryScreen.route(widget.clothInfo.clothesByClothesType.pants, category));
+                    Navigator.push(context, CategoryScreen.route(_myPageBloc.myPageResponse.clothesByClothesType.pants, category));
                     break;
                   }
                   case 2: {
                     category = '양말';
-                    Navigator.push(context, CategoryScreen.route(widget.clothInfo.clothesByClothesType.socks, category));
+                    Navigator.push(context, CategoryScreen.route(_myPageBloc.myPageResponse.clothesByClothesType.socks, category));
                     break;
                   }
                   case 3: {
                     category = '속옷';
-                    Navigator.push(context, CategoryScreen.route(widget.clothInfo.clothesByClothesType.underwear, category));
+                    Navigator.push(context, CategoryScreen.route(_myPageBloc.myPageResponse.clothesByClothesType.underwear, category));
                     break;
                   }
                   case 4: {
                     category = '수건';
-                    Navigator.push(context, CategoryScreen.route(widget.clothInfo.clothesByClothesType.towel, category));
+                    Navigator.push(context, CategoryScreen.route(_myPageBloc.myPageResponse.clothesByClothesType.towel, category));
                     break;
                   }
                 }
